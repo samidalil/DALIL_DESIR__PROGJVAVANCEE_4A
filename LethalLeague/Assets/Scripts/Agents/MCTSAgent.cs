@@ -114,6 +114,7 @@ public class MCTSAgent: AAgent
             a = possibleActions[Random.Range(0, possibleActions.Count - 1)];
             n.game.PlayAction(a, PlayerTag.Two);
 
+            // La simulation utilise trop de mémoire
             n.game.Tick();
         }
 
