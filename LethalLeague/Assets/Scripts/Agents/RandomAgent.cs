@@ -7,6 +7,6 @@ public class RandomAgent: AAgent
     {
         List<Action> possibleActions = game.GetPossibleActions(tag);
 
-        return possibleActions[Random.Range(0, possibleActions.Count)];
+        return possibleActions[Random.Range(0, possibleActions.Count - 1)];
     }
 }

@@ -19,9 +19,13 @@ public class Game
     public Box strikeHitboxP1;
     public Box strikeHitboxP2;
 
+    bool canLog = false;
     int ticks = 0;
 
-    public Game() { }
+    public Game(bool log = false)
+    {
+        canLog = log;
+    }
 
     public Game(Game g)
     {
@@ -86,11 +90,16 @@ public class Game
         return actions;
     }
 
+    void DebugLog(object message)
+    {
+        if (canLog) Debug.Log(message);
+    }
+
     void ApplyStrikeAction(ref Player p, Direction d)
     {
         if (p.strikeHitbox.canBeEnabled)
         {
-            Debug.Log($"Player {p.tag} is striking {d}");
+            DebugLog($"Player {p.tag} is striking {d}");
             p.strikeHitbox.isEnabled = true;
             p.strikeHitbox.canBeEnabled = false;
             p.strikeHitbox.lastActivationTick = ticks;
@@ -148,7 +157,7 @@ public class Game
             Geometry.IsColliding(b, p)
         )
         {
-            Debug.Log($"Player {p.tag} lost HP");
+            DebugLog($"Player {p.tag} lost HP");
             p.hp--;
             p.lastHitTick = ticks;
             p.canTakeDamage = false;
@@ -160,13 +169,13 @@ public class Game
         if (p.strikeHitbox.isEnabled)
         {
             Vector2 facingDirection = p.facing == Facing.Left ? Vector2.left : Vector2.right;
-            Debug.Log(facingDirection);
+            DebugLog(facingDirection);
 
             p.strikeHitbox.box.position = p.box.position + facingDirection;
 
             if (Geometry.IsColliding(b, p.strikeHitbox.box))
             {
-                Debug.Log($"Player {p.tag} struck the ball");
+                DebugLog($"Player {p.tag} struck the ball");
 
                 Vector2 direction;
 
@@ -201,7 +210,7 @@ public class Game
     {
         if (Geometry.IsColliding(b, w))
         {
-            Debug.Log($"Ball colliding: {b.circle.position}, {w.position}");
+            DebugLog($"Ball colliding: {b.circle.position}, {w.position}");
 
             b.velocity = Vector2.Reflect(b.velocity, Geometry.GetCollisionNormal(b, w));
         }
@@ -211,7 +220,7 @@ public class Game
     {
         if (Geometry.IsColliding(p, w))
         {
-            Debug.Log($"Player {p.tag} colliding: {p.box.position}, {w.position}");
+            DebugLog($"Player {p.tag} colliding: {p.box.position}, {w.position}");
 
             Vector2 normal = Geometry.GetCollisionNormal(p.box.position, w.position, w.scale);
 

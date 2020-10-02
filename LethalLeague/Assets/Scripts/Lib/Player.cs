@@ -56,4 +56,11 @@ public struct Player
     public bool canTakeDamage;
     public float lastHitTick;
     public StrikeHitbox strikeHitbox;
+
+    public static PlayerTag SwitchPlayerTag(PlayerTag t)
+    {
+        if (t == PlayerTag.One) return PlayerTag.Two;
+        if (t == PlayerTag.Two) return PlayerTag.One;
+        return PlayerTag.None;
+    }
 }

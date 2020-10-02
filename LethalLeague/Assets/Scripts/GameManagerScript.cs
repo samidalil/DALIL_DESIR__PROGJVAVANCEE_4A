@@ -40,7 +40,12 @@ public class GameManagerScript : MonoBehaviour
         {
             game.PlayAction(agent1.GetAction(), agent1.GetPlayerTag());
             game.PlayAction(agent2.GetAction(), agent2.GetPlayerTag());
+
             game.Tick();
+
+            agent1.SetGame(game);
+            agent2.SetGame(game);
+
             UpdatePositions();
         }
     }

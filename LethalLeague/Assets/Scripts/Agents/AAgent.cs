@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using UnityEditor;
-
-public enum AgentType
+﻿public enum AgentType
 {
     Player,
     Random,
@@ -31,8 +28,9 @@ public abstract class AAgent
 
     public void SetGame(Game g)
     {
-        game = g;
+        game = new Game(g);
     }
+
     public void SetPlayerTag(PlayerTag playerTag)
     {
         tag = playerTag;
