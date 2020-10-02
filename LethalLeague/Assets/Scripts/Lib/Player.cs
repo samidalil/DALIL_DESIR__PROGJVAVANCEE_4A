@@ -22,12 +22,12 @@ public struct Player
         action = Action.Idle;
         facing = position.x > 0 ? Facing.Left : Facing.Right;
         tag = playerTag;
-        hp = 5;
+        hp = Constants.PLAYER_BASE_HP;
         isAirborne = false;
         isStriking = false;
         canTakeDamage = true;
         lastHitTick = 0;
-        strikeHitbox = new StrikeHitbox();
+        strikeHitbox = new StrikeHitbox(Vector2.zero);
     }
 
     public Player(Player p)

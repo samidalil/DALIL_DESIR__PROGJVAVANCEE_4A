@@ -168,10 +168,13 @@ public class Game
     {
         if (p.strikeHitbox.isEnabled)
         {
-            Vector2 facingDirection = p.facing == Facing.Left ? Vector2.left : Vector2.right;
-            DebugLog(facingDirection);
+            float facingDirection = p.facing == Facing.Left ? -1 : 1;
 
-            p.strikeHitbox.box.position = p.box.position + facingDirection;
+            Vector2 offset = Constants.STRIKE_HITBOX_OFFSET;
+
+            offset.x *= facingDirection;
+
+            p.strikeHitbox.box.position = p.box.position + offset;
 
             if (Geometry.IsColliding(b, p.strikeHitbox.box))
             {
@@ -192,7 +195,7 @@ public class Game
                         break;
                 }
 
-                direction.x *= facingDirection.x;
+                direction.x *= facingDirection;
 
                 ball.speed = Mathf.Min(
                     ball.speed + Constants.BALL_STEP,

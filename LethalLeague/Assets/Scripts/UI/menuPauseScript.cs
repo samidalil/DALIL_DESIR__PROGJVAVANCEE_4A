@@ -6,26 +6,18 @@ using UnityEngine.Audio;
 
 public class menuPauseScript : MonoBehaviour
 {
-
-    public static bool gameIsPaused = false;
-
-    [SerializeField]
-    public GameObject pauseMenuUI;
+    [SerializeField] private GameObject pauseMenuUI;
+    [SerializeField] private GameObject playerUi;
+    [SerializeField] private GameManagerScript gameManager;
 
     public AudioMixer audioMixer;
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (gameIsPaused)
-            {
-                Resume();
-            } else
-            {
-                Pause();
-            }
+            if (gameManager.IsRunning()) Pause();
+            else Resume();
         }
     }
 
@@ -33,16 +25,18 @@ public class menuPauseScript : MonoBehaviour
     {
         audioMixer.SetFloat("thresholdMusic", 0.0f);
         pauseMenuUI.SetActive(false);
+        playerUi.SetActive(true);
         Time.timeScale = 1.0f;
-        gameIsPaused = false;
+        gameManager.ToggleRunning();
     }
 
     void Pause()
     {
         audioMixer.SetFloat("thresholdMusic", -45.0f);
         pauseMenuUI.SetActive(true);
+        playerUi.SetActive(false);
         Time.timeScale = 0.0f;
-        gameIsPaused = true;
+        gameManager.ToggleRunning();
     }
 
     public void MenuLoad()

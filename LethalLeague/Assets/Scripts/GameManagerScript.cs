@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -28,6 +29,11 @@ public class GameManagerScript : MonoBehaviour
         isRunning = !isRunning;
     }
 
+    public bool IsRunning()
+    {
+        return isRunning;
+    }
+
     void Awake()
     {
         InitializeGame();
@@ -40,7 +46,9 @@ public class GameManagerScript : MonoBehaviour
     {
         if (isRunning)
         {
+            // Debug.Log($"Start MCTS: {Time.time}");
             game.PlayAction(agent1.GetAction(), agent1.GetPlayerTag());
+            // Debug.Log($"End MCTS: {Time.time}");
             game.PlayAction(agent2.GetAction(), agent2.GetPlayerTag());
 
             game.Tick();
@@ -52,7 +60,15 @@ public class GameManagerScript : MonoBehaviour
             healthBar2.setHealth(game.player2.hp);
 
             UpdatePositions();
+
+            if (game.IsFinished()) MenuLoad();
         }
+    }
+
+    void MenuLoad()
+    {
+        Time.timeScale = 1.0f;
+        SceneManager.LoadScene("homeScreen");
     }
 
     void InitializeGame()
@@ -81,10 +97,16 @@ public class GameManagerScript : MonoBehaviour
         };
 
         player1Transform.position = game.player1.box.position;
-        player1Transform.localScale = game.player1.box.scale;
+        player1Transform.localScale = new Vector3(game.player1.box.scale.x, game.player1.box.scale.y, 1);
+        strikeHitbox1Transform.localScale = new Vector3(
+            game.player1.strikeHitbox.box.scale.x,
+            game.player1.strikeHitbox.box.scale.y, 1);
 
         player2Transform.position = game.player2.box.position;
-        player2Transform.localScale = game.player2.box.scale;
+        player2Transform.localScale = new Vector3(game.player2.box.scale.x, game.player2.box.scale.y, 1);
+        strikeHitbox2Transform.localScale = new Vector3(
+            game.player2.strikeHitbox.box.scale.x,
+            game.player2.strikeHitbox.box.scale.y, 1);
 
         healthBar1.setMaxHealth(game.player1.hp);
         healthBar2.setMaxHealth(game.player2.hp);
@@ -95,7 +117,7 @@ public class GameManagerScript : MonoBehaviour
         for (int i = 0; i < 4; i++)
         {
             wallsTransform[i].position = game.walls[i].position;
-            wallsTransform[i].localScale = game.walls[i].scale;
+            wallsTransform[i].localScale = new Vector3(game.walls[i].scale.x, game.walls[i].scale.y, 1);
         }
 
         this.game = game;

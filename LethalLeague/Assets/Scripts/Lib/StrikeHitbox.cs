@@ -9,13 +9,13 @@ public enum Direction
 
 public struct StrikeHitbox
 {
-    public StrikeHitbox(int a = 0, bool b = false, Direction c = Direction.Straight)
+    public StrikeHitbox(Vector2 pos)
     {
-        lastActivationTick = a;
-        isEnabled = b;
+        lastActivationTick = 0;
+        isEnabled = false;
         canBeEnabled = true;
-        direction = c;
-        box = new Box(Vector2.zero, new Vector2(1, 1));
+        direction = Direction.Straight;
+        box = new Box(pos, Constants.STRIKE_HITBOX_SCALE);
     }
 
     public StrikeHitbox(StrikeHitbox s)
