@@ -8,7 +8,7 @@ public static class Constants
     public static int BALL_MAX_SPEED = 14;
     public static float BALL_STEP = 1.3f;
 
-    public static int PLAYER_BASE_HP = 1;
+    public static int PLAYER_BASE_HP = 3;
     public static int PLAYER_SPEED = 7;
     public static int MOVE_FRICTION = 1;
     public static int JUMP_FORCE = 14;
