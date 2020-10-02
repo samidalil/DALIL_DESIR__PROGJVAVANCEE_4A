@@ -9,44 +9,52 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] Transform player2Transform;
     [SerializeField] Transform ballTransform;
     [SerializeField] Transform[] wallsTransform;
-    [SerializeField] AgentType agentType1;
-    [SerializeField] AgentType agentType2;
-    [SerializeField] HealthBar healthBar1;
-    [SerializeField] HealthBar healthBar2;
-    [SerializeField] Text text;
-    [SerializeField] GameObject finishUI;
 
+    [SerializeField] private UIManagerScript uiManager;
 
     // Debugging
+    [SerializeField] AgentType agentType1;
+    [SerializeField] AgentType agentType2;
     [SerializeField] Transform strikeHitbox1Transform;
     [SerializeField] Transform strikeHitbox2Transform;
 
+    Game game;
+    bool isRunning = false;
     AAgent agent1;
     AAgent agent2;
 
-    bool isRunning = true;
-    Game game;
 
     public void ToggleRunning()
     {
         isRunning = !isRunning;
     }
 
+    public bool IsRunning()
+    {
+        return isRunning;
+    }
+
     void Awake()
     {
         InitializeGame();
+    }
 
-        agent1 = AAgent.CreateAgent(agentType1, game, PlayerTag.One);
-        agent2 = AAgent.CreateAgent(agentType2, game, PlayerTag.Two);
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (isRunning) uiManager.Pause();
+            else uiManager.Resume();
+
+            ToggleRunning();
+        }
     }
 
     void FixedUpdate()
     {
         if (isRunning)
         {
-            // Debug.Log($"Start MCTS: {Time.time}");
             game.PlayAction(agent1.GetAction(), agent1.GetPlayerTag());
-            // Debug.Log($"End MCTS: {Time.time}");
             game.PlayAction(agent2.GetAction(), agent2.GetPlayerTag());
 
             game.Tick();
@@ -54,8 +62,7 @@ public class GameManagerScript : MonoBehaviour
             agent1.SetGame(game);
             agent2.SetGame(game);
 
-            healthBar1.setHealth(game.player1.hp);
-            healthBar2.setHealth(game.player2.hp);
+            uiManager.OnGameTick(game);
 
             UpdatePositions();
 
@@ -66,11 +73,10 @@ public class GameManagerScript : MonoBehaviour
     void FinishGame()
     {
         isRunning = false;
-        finishUI.SetActive(true);
-        text.text = "Player " + game.GetResult().ToString() + " won !!";
+        uiManager.OnGameEnd(game);
     }
 
-    void InitializeGame()
+    public void InitializeGame()
     {
         Game game = new Game();
 
@@ -107,9 +113,6 @@ public class GameManagerScript : MonoBehaviour
             game.player2.strikeHitbox.box.scale.x,
             game.player2.strikeHitbox.box.scale.y, 1);
 
-        healthBar1.setMaxHealth(game.player1.hp);
-        healthBar2.setMaxHealth(game.player2.hp);
-
         ballTransform.position = game.ball.circle.position;
         ballTransform.localScale = new Vector2(game.ball.circle.radius, game.ball.circle.radius);
 
@@ -120,6 +123,13 @@ public class GameManagerScript : MonoBehaviour
         }
 
         this.game = game;
+
+        isRunning = true;
+
+        uiManager.OnGameStart(game);
+
+        agent1 = AAgent.CreateAgent(agentType1, game, PlayerTag.One);
+        agent2 = AAgent.CreateAgent(agentType2, game, PlayerTag.Two);
     }
 
     void UpdatePositions()
