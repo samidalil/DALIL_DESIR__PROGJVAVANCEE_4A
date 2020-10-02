@@ -10,6 +10,8 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] Transform[] wallsTransform;
     [SerializeField] AgentType agentType1;
     [SerializeField] AgentType agentType2;
+    [SerializeField] HealthBar healthBar1;
+    [SerializeField] HealthBar healthBar2;
 
     // Debugging
     [SerializeField] Transform strikeHitbox1Transform;
@@ -46,6 +48,9 @@ public class GameManagerScript : MonoBehaviour
             agent1.SetGame(game);
             agent2.SetGame(game);
 
+            healthBar1.setHealth(game.player1.hp);
+            healthBar2.setHealth(game.player2.hp);
+
             UpdatePositions();
         }
     }
@@ -80,6 +85,9 @@ public class GameManagerScript : MonoBehaviour
 
         player2Transform.position = game.player2.box.position;
         player2Transform.localScale = game.player2.box.scale;
+
+        healthBar1.setMaxHealth(game.player1.hp);
+        healthBar2.setMaxHealth(game.player2.hp);
 
         ballTransform.position = game.ball.circle.position;
         ballTransform.localScale = new Vector2(game.ball.circle.radius, game.ball.circle.radius);
