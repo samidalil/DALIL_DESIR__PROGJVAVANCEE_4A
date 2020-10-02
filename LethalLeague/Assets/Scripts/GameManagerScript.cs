@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -12,6 +13,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] AgentType agentType2;
     [SerializeField] HealthBar healthBar1;
     [SerializeField] HealthBar healthBar2;
+    [SerializeField] Text text;
+    [SerializeField] GameObject finishUI;
+
 
     // Debugging
     [SerializeField] Transform strikeHitbox1Transform;
@@ -28,7 +32,7 @@ public class GameManagerScript : MonoBehaviour
         isRunning = !isRunning;
     }
 
-    void Awake()
+    public void Awake()
     {
         InitializeGame();
 
@@ -52,6 +56,13 @@ public class GameManagerScript : MonoBehaviour
             healthBar2.setHealth(game.player2.hp);
 
             UpdatePositions();
+
+            if (game.IsFinished())
+                ToggleRunning();
+        } else
+        {
+            finishUI.SetActive(true);
+            text.text = "Player " + game.GetResult().ToString() + " won !!";
         }
     }
 
