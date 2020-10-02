@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameManagerScript : MonoBehaviour
 {
@@ -13,6 +13,9 @@ public class GameManagerScript : MonoBehaviour
     [SerializeField] AgentType agentType2;
     [SerializeField] HealthBar healthBar1;
     [SerializeField] HealthBar healthBar2;
+    [SerializeField] Text text;
+    [SerializeField] GameObject finishUI;
+
 
     // Debugging
     [SerializeField] Transform strikeHitbox1Transform;
@@ -27,11 +30,6 @@ public class GameManagerScript : MonoBehaviour
     public void ToggleRunning()
     {
         isRunning = !isRunning;
-    }
-
-    public bool IsRunning()
-    {
-        return isRunning;
     }
 
     void Awake()
@@ -61,14 +59,15 @@ public class GameManagerScript : MonoBehaviour
 
             UpdatePositions();
 
-            if (game.IsFinished()) MenuLoad();
+            if (game.IsFinished()) FinishGame();
         }
     }
 
-    void MenuLoad()
+    void FinishGame()
     {
-        Time.timeScale = 1.0f;
-        SceneManager.LoadScene("homeScreen");
+        isRunning = false;
+        finishUI.SetActive(true);
+        text.text = "Player " + game.GetResult().ToString() + " won !!";
     }
 
     void InitializeGame()
