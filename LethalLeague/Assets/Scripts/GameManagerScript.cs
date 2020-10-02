@@ -66,7 +66,6 @@ public class GameManagerScript : MonoBehaviour
 
             UpdatePositions();
 
-            Debug.Log("test");
             if (game.IsFinished()) FinishGame();
         }
     }
